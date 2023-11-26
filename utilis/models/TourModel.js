@@ -4,7 +4,8 @@ const tourSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true
   },
   duration: Number,
   maxGroupSize: {
@@ -25,10 +26,12 @@ const tourSchema = new mongoose.Schema({
   },
   summary: {
     type: String,
-    required: [true, 'A trip must have a summary']
+    required: [true, 'A trip must have a summary'],
+    trim: true
   },
   description: {
-    type: String
+    type: String,
+    trim: true
   },
   imageCover: {
     type: String,
