@@ -18,6 +18,18 @@ exports.getAllTours = async (req, res) => {
     // Use req.query for query parameters
     let query = Tour.find(JSON.parse(queryStr));
 
+    // pagination
+    const page = req.query.page * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page - 1) * limit;
+
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numOfTours = await Tour.countDocuments();
+      if (skip >= numOfTours) throw new Error('This page has no data');
+    }
+
     // Sorting
     if (req.query.sort) {
       const sortBy = req.query.sort.split(',').join(' ');
@@ -34,6 +46,7 @@ exports.getAllTours = async (req, res) => {
     } else {
       query.select('-__v');
     }
+
     // Execute the query
     const tours = await query;
 
