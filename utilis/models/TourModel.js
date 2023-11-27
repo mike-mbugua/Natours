@@ -39,6 +39,16 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
+    priceDiscount: {
+      type: Number,
+      // Custom validations
+      validate: {
+        validator: function(val) {
+          return val < this.price;
+        },
+        message: 'The discount ({VALUE}) cannot be greater than price'
+      }
+    },
     summary: {
       type: String,
       required: [true, 'A trip must have a summary'],
