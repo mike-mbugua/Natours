@@ -46,6 +46,10 @@ const tourSchema = new mongoose.Schema(
     startDates: {
       type: [Date]
     },
+    secretTour: {
+      type: Boolean,
+      default: false
+    },
     createdAt: {
       type: Date,
       default: Date.now()
@@ -61,9 +65,15 @@ tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
 });
 
-// this is  a middleware that runs before .save(),.create() methods
+// DOCUMENT MIDDLEWARE this is  a middleware that runs before .save(),.create() methods
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+// QUERRY MIDDLEWARE this middleware is ran before returning the find ethod. this is how it works
+tourSchema.pre(/^find/, function(next) {
+  this.find({ secretTour: { $ne: true } });
   next();
 });
 
