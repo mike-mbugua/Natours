@@ -128,6 +128,14 @@ const tourSchema = new mongoose.Schema(
 //   next();
 // });
 
+// Virtual populate this is how it works and this is for parents to child reference
+
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id'
+});
+
 // DOCUMENT MIDDLEWARE this is  a middleware that runs before .save(),.create() methods
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true });
