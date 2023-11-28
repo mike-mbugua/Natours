@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const Tour = require('./../models/TourModel');
 
-dotenv.config({ path: './../config.env' });
+dotenv.config({ path: '../../config.env' });
 const db = process.env.DATABASE;
 
 mongoose
@@ -13,9 +13,7 @@ mongoose
   })
   .then(() => console.log(`database connected`));
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/data/tours-simple.json`)
-);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/data/tours.json`));
 
 // to import data to database
 
