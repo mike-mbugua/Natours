@@ -128,13 +128,15 @@ const tourSchema = new mongoose.Schema(
 //   next();
 // });
 
-tourSchema.virtual('durationWeeks').get(function() {
-  return this.duration / 7;
-});
-
 // DOCUMENT MIDDLEWARE this is  a middleware that runs before .save(),.create() methods
 tourSchema.pre('save', function(next) {
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+// to populate referenced data we can used a document middleware. here is how
+tourSchema.pre(/^find/, function(next) {
+  this.populate('guides');
   next();
 });
 
@@ -142,6 +144,10 @@ tourSchema.pre('save', function(next) {
 tourSchema.pre(/^find/, function(next) {
   this.find({ secretTour: { $ne: true } });
   next();
+});
+
+tourSchema.virtual('durationWeeks').get(function() {
+  return this.duration / 7;
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
