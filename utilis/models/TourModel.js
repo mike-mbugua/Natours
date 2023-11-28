@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./UserModel');
+// const User = require('./UserModel');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -100,7 +100,16 @@ const tourSchema = new mongoose.Schema(
       type: Date,
       default: Date.now()
     },
-    guides: Array
+    // in embedding you just define the data to be embedded as below
+    // guides: Array
+
+    // But for referencing here is how its done
+    guides: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User' /**this is the model you are refering to */
+      }
+    ]
   },
   {
     toJSON: { virtuals: true },
@@ -109,11 +118,15 @@ const tourSchema = new mongoose.Schema(
 );
 
 // Embedding guides to the tour schema
-tourSchema.pre('save', async function(next) {
-  const guidePromise = this.guides.map(async id => await User.findById(id));
-  this.guides = await Promise.all(guidePromise);
-  next();
-});
+// set the guides in the schema without any data just an empty array.
+// then import the model you want to embedd
+// then run the code below to embedd the data defore saving the data to the DB
+
+// tourSchema.pre('save', async function(next) {
+//   const guidePromise = this.guides.map(async id => await User.findById(id));
+//   this.guides = await Promise.all(guidePromise);
+//   next();
+// });
 
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
