@@ -3,6 +3,7 @@ const morgan = require('morgan');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewsRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use(express.static(`${__dirname}/public`));
 // 3) ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewsRouter);
 
 module.exports = app;
