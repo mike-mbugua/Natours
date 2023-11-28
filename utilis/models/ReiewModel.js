@@ -2,23 +2,6 @@ const mongoose = require('mongoose');
 
 const reviewSchema = new mongoose.Schema(
   {
-    tour: {
-      type: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Tour',
-        required: [true, 'A review must belong to a Tour']
-      }
-    },
-    user: [
-      {
-        type: {
-          type: mongoose.Schema.ObjectId,
-          ref: 'User',
-          required: [true, 'A review must belong to a User']
-        }
-      }
-    ],
-
     review: {
       type: String,
       required: [true, 'a review can not be empty']
@@ -32,6 +15,16 @@ const reviewSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       Default: Date.now()
+    },
+    tour: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Tour',
+      required: [true, 'A review must belong to a Tour']
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'A review must belong to a User']
     }
   },
   {
