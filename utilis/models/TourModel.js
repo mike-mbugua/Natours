@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./UserModel');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -31,7 +32,7 @@ const tourSchema = new mongoose.Schema(
       // *validations
       required: [true, 'A tour must have a difficulty level'],
       enum: {
-        values: ['Easy', 'Medium', 'Hard'],
+        values: ['easy', 'medium', 'difficult'],
         message: 'Difficulty level can only either be easy,medium or hard'
       }
     },
@@ -68,6 +69,29 @@ const tourSchema = new mongoose.Schema(
     startDates: {
       type: [Date]
     },
+    startLocation: {
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point']
+      },
+      description: String,
+      coordinates: [Number],
+      address: String
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point']
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number
+      }
+    ],
     secretTour: {
       type: Boolean,
       default: false
@@ -75,13 +99,21 @@ const tourSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now()
-    }
+    },
+    guides: Array
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
   }
 );
+
+// Embedding guides to the tour schema
+tourSchema.pre('save', async function(next) {
+  const guidePromise = this.guides.map(async id => await User.findById(id));
+  this.guides = await Promise.all(guidePromise);
+  next();
+});
 
 tourSchema.virtual('durationWeeks').get(function() {
   return this.duration / 7;
