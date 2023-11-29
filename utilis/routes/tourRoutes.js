@@ -1,5 +1,6 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController');
+const reviewController = require('./../controllers/reviewController');
 
 const router = express.Router();
 
@@ -18,5 +19,11 @@ router
   .get(tourController.getTour)
   .patch(tourController.updateTour)
   .delete(tourController.deleteTour);
+
+// nested routes
+// this happens when there is a connection between a parent and a child, it should be in the parents routes
+// in this case implementing for tour as the parent to the reviews
+
+router.route('/:tourId/reviews').post(reviewController.createReview);
 
 module.exports = router;
