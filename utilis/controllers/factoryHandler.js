@@ -64,3 +64,19 @@ exports.getAllDocuments = Model => async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getOne = (Model, popOptions) => async (req, res) => {
+  try {
+    let query = Model.findById(req.params.id);
+    if (popOptions) query = query.populate(popOptions);
+    const doc = await query;
+    res.status(200).json({
+      status: 'success',
+      data: {
+        doc
+      }
+    });
+  } catch (error) {
+    res.status(401).json({ Error: error });
+  }
+};
