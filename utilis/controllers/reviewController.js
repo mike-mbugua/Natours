@@ -1,4 +1,5 @@
 const Review = require('../models/ReviewModel');
+const factory = require('./factoryHandler');
 
 exports.getAllReviews = async (req, res) => {
   try {
@@ -22,3 +23,5 @@ exports.createReview = async (req, res) => {
     res.status(401).json({ error });
   }
 };
+
+exports.deleteReview = factory.deleteOne(Review);
