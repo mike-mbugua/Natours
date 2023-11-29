@@ -21,7 +21,8 @@ exports.setTourUserIds = (req, res, next) => {
   next();
   // if (!req.body.user) req.body.tour = req.user.id;
 };
-exports.createReview = factory.createOne(Review);
 
+exports.createReview = factory.createOne(Review);
+exports.getOneReview = factory.getOne(Review);
 exports.deleteReview = factory.deleteOne(Review);
 exports.updateReview = factory.updateOne(Review);
