@@ -32,19 +32,7 @@ exports.getAllTours = async (req, res) => {
   }
 };
 
-exports.getTour = async (req, res) => {
-  try {
-    const tour = await Tour.findById(req.params.id).populate('reviews');
-    res.status(200).json({
-      status: 'success',
-      data: {
-        tour
-      }
-    });
-  } catch (error) {
-    res.status(401).json({ Error: error });
-  }
-};
+exports.getTour = factory.getOne(Tour, 'reviews');
 
 exports.createTour = factory.createOne(Tour);
 exports.updateTour = factory.updateOne(Tour);
