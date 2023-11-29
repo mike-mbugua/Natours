@@ -1,5 +1,6 @@
 const Tour = require('../models/TourModel');
 const APIFeatures = require('../apiFeatures');
+const factory = require('./factoryHandler');
 
 exports.topAlias = (req, res, next) => {
   req.query.limit = '5';
@@ -111,14 +112,4 @@ exports.updateTour = async (req, res) => {
   }
 };
 
-exports.deleteTour = async (req, res) => {
-  try {
-    await Tour.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      status: 'success',
-      data: null
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-};
+exports.deleteTour = factory.deleteOne(Tour);
