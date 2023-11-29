@@ -1,4 +1,5 @@
 const User = require('../models/UserModel');
+const factory = require('./factoryHandler');
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -29,9 +30,4 @@ exports.updateUser = (req, res) => {
     message: 'This route is not yet defined!'
   });
 };
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined!'
-  });
-};
+exports.deleteUser = factory.deleteOne(User);
