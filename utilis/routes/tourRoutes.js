@@ -1,8 +1,20 @@
 const express = require('express');
 const tourController = require('./../controllers/tourController');
-const reviewController = require('./../controllers/reviewController');
+const reviewRouter = require('./../routes/reviewRoutes');
 
 const router = express.Router();
+
+// nested routes
+// this happens when there is a connection between a parent and a child, it should be in the parents routes
+// in this case implementing for tour as the parent to the reviews
+
+// so instead of  nesting as below we will be repeating our own code that is in review router,The best option will be to use merge params
+
+// router.route('/:tourId/reviews').post(reviewController.createReview);
+
+// instead use this as mounting router
+// then in the review route make sure to add mergeParams as true
+router.use('/:tourId/reviews', reviewRouter);
 
 // router.param('id', tourController.checkID);
 router
@@ -19,11 +31,5 @@ router
   .get(tourController.getTour)
   .patch(tourController.updateTour)
   .delete(tourController.deleteTour);
-
-// nested routes
-// this happens when there is a connection between a parent and a child, it should be in the parents routes
-// in this case implementing for tour as the parent to the reviews
-
-router.route('/:tourId/reviews').post(reviewController.createReview);
 
 module.exports = router;
