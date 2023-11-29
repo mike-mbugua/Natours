@@ -2,8 +2,11 @@ const Review = require('../models/ReviewModel');
 
 exports.getAllReviews = async (req, res) => {
   try {
-    const reviews = await Review.find();
-    // the nested routing
+    // nested get review code
+    let filter = {};
+    if (req.params.tourId) filter = { tour: req.params.tourId };
+    const reviews = await Review.find(filter);
+    //
     res.status(200).json({ data: reviews.length, reviews });
   } catch (error) {
     res.status(401).json({ error });
