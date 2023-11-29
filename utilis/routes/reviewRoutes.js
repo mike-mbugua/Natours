@@ -1,7 +1,8 @@
 const express = require('express');
 const reviewController = require('../controllers/reviewController');
 
-const router = express.Router();
+// use this to merge the route from tour parent route { mergeParams: true }
+const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
