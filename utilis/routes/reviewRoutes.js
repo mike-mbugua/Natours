@@ -8,4 +8,7 @@ router
   .route('/')
   .get(reviewController.getAllReviews)
   .post(reviewController.createReview);
+
+router.route('/:id').delete(reviewController.deleteReview);
+
 module.exports = router;
