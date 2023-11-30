@@ -42,10 +42,13 @@ exports.createOne = Model => async (req, res) => {
   }
 };
 
-exports.getAllDocuments = Model => async (req, res) => {
+exports.getAllDocuments = Model => async (req, res, next) => {
   try {
+    // For the nested routes
+    let filter = {};
+    if (req.params.tourId) filter = { tour: req.params.tourId };
     // Execute the query
-    const features = new APIFeatures(Model.find(), req.query)
+    const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .paginate()
       .sort()
