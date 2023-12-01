@@ -51,3 +51,27 @@ exports.login = async (req, res, next) => {
 
   res.status(200).json({ msg: 'Success', token });
 };
+
+// protecting routes
+exports.protect = async (req, res, next) => {
+  try {
+    // 1) Getting the token and check if it's there
+    let token;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+    // 1(a) return the error if there is no token
+    if (!token) {
+      return next(Error('Please login/to view all the tours'));
+    }
+    // 2) VERIFYING THE TOKEN
+    // 3) check if the user still exists
+    // 4) check if the user changed the password after the token was issued
+    next();
+  } catch (error) {
+    console.log(error);
+  }
+};
