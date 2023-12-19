@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide a password'],
     select: false
   },
+  passwordChangedAt: {
+    type: Date
+  },
   passwordConfirm: {
     type: String,
     validate: {
@@ -46,11 +49,26 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+// comparing passwords
 userSchema.methods.correctPassword = async function(
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return JWTTimestamp < changedTimestamp;
+  }
+
+  // if the password has not been changed then;
+  return false;
 };
 
 const User = mongoose.model('User', userSchema);
