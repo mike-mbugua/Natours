@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/UserModel');
 
@@ -68,8 +69,27 @@ exports.protect = async (req, res, next) => {
       return next(Error('Please login/to view all the tours'));
     }
     // 2) VERIFYING THE TOKEN
+
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
     // 3) check if the user still exists
+    const freshUser = await User.findById(decoded.id);
+    if (!freshUser) {
+      res
+        .status(401)
+        .json({ message: 'User belonging to that token does not exist' });
+    }
     // 4) check if the user changed the password after the token was issued
+    if (freshUser.changedPasswordAfter(decoded.iat)) {
+      return next(
+        Error(
+          'User changed their passwords recently please login using correct details'
+        )
+      );
+    }
+
+    // grant access
+    req.user = freshUser;
     next();
   } catch (error) {
     console.log(error);
